@@ -2,11 +2,11 @@ import pandas as pd
 import requests
 
 # Load the Excel file with test data
-file_path = 'Book3.xlsx'  # Replace with the path to your Excel file
+file_path = 'Book3.xlsx' 
 data = pd.read_excel(file_path)
 
 # URL of your Flask app's search endpoint
-url = "http://localhost:5002/search"  # Replace with your actual URL if different
+url = "http://localhost:5002/search" 
 
 # Initialize counters for test results
 total_tests = len(data)
