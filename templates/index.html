@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        #search-container {
+            width: 50%;
+            text-align: center;
+        }
+        #search-bar {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #prompt-select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #results {
+            margin-top: 20px;
+            width: 50%;
+        }
+        .result-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="search-container">
+        <input type="text" id="search-bar" placeholder="Type your search here...">
+        <select id="prompt-select">
+            <option value="default">First Prompt</option>
+            <option value="custom">Second Prompt</option>
+            <option value="keyword_generation">Keyword Generation Prompt</option>
+        </select>
+    </div>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('search-bar').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        async function performSearch() {
+            const query = document.getElementById('search-bar').value;
+            const promptType = document.getElementById('prompt-select').value;
+            if (!query) return;
+
+            const response = await fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: query, prompt_type: promptType })
+            });
+
+            const data = await response.json();
+            displayResults(data.response);
+        }
+
+        function displayResults(results) {
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = '';
+
+            if (results && results.length) {
+                results.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'result-item';
+                    resultItem.textContent = result;
+                    resultsContainer.appendChild(resultItem);
+                });
+            } else {
+                resultsContainer.textContent = 'No results found.';
+            }
+        }
+    </script>
+</body>
+</html>
